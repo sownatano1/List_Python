@@ -22,7 +22,7 @@ import time
 
 """
 
-ficheiro = {}
+fichario = {}
 key = ""
 onList = False
 
@@ -35,26 +35,29 @@ def LimparConsole():
 
 def Opcoes():
     print("-========== MENU ==========-")
-    print("f = Criar ou deletar um fichário")
+    print("f = Criar um fichário")
+    print("l = Abrir a lista")
+    print("")
     print("a = Adicionar item na lista")
     print("m = Modificar um item da lista")
-    print("l = Abrir a lista")
+    print("")
     print("r = Remover item da lista")
-    print("d = Deletar lista do ficheiro")
+    print("d = Deletar lista do fichário")
     print("e = Esvaziar a lista inteira")
+    print("")
     print("s = Sair")
     print("-==========================-")
     
 def Dicionario():
-    if ficheiro:
-        print("========== Ficheiro ===========")
-        for indice, item in enumerate(ficheiro, start=1):
+    if fichario:
+        print("========== Fichário ===========")
+        for indice, item in enumerate(fichario, start=1):
             print(f"{indice}. {item}")
         print("===============================")
         if onList: 
             try:
                 key_lista = int(input("Digite o número da lista para abrir-la: "))
-                if (key_lista > len(ficheiro) or key_lista < 0):
+                if (key_lista > len(fichario) or key_lista < 0):
                     LimparConsole()
                     print("Lista não encontrada")
                 else:
@@ -65,19 +68,19 @@ def Dicionario():
                 print("Digite apenas o número da lista para abrir-la")
                 time.sleep(1.5)
     else:
-        print("========== Ficheiro ===========")
+        print("========== Fichário ===========")
         print("             Vazio             ")
         print("===============================")
         input("Pressione 'ENTER' para voltar para o menu")
 
 def Lista(lista_num):
-    nomes_listas = list(ficheiro.keys())
+    nomes_listas = list(fichario.keys())
     lista_escolhida = nomes_listas[lista_num - 1]
     
-    if len(ficheiro[lista_escolhida]) > 0:
+    if len(fichario[lista_escolhida]) > 0:
         print(f"Lista de '{lista_escolhida}'")
         print("============ Lista ============")
-        for indice, item in enumerate(ficheiro[lista_escolhida], start=1):
+        for indice, item in enumerate(fichario[lista_escolhida], start=1):
             print(f"{indice}. {item}")
         print("===============================")
     else:
@@ -86,22 +89,27 @@ def Lista(lista_num):
         print("             Vazia             ")
         print("===============================")
 
-def Ficheiro():
+def CriarFichario():
     LimparConsole()
     while(True):
-        novo_ficheiro = input("Digite o nome do novo ficheiro: ")
-        ficheiro[novo_ficheiro] = []
-        Dicionario()
+        novo_fichario = input("Digite o nome do novo fichario: ")
+        if novo_fichario.strip() == "":
+            LimparConsole()
+            print("Não é possível ter um fichário sem nome")
+            time.sleep(1.5)
+        else:
+            fichario[novo_fichario] = []
+            Dicionario()
+            
         print("c = Continuar")
         print("enter = Voltar")
         key = input().lower()
 
-        if key not in ["c", "a"]:
+        if key not in ["c", "f"]:
             break
 
         else:
             LimparConsole()
-
 def Adicionar():
     LimparConsole()
     while(True):
@@ -110,7 +118,7 @@ def Adicionar():
             lista_numero = int(input("Digite o número da lista para abrir-la: "))
             LimparConsole()
             try:
-                nomes_listas = list(ficheiro.keys())
+                nomes_listas = list(fichario.keys())
                 nome_escolhido = nomes_listas[lista_numero - 1]
                 itens = input(f"Digite o nome do item para adicionar na lista '{nome_escolhido}': ")
                 if itens.strip() == "":
@@ -118,7 +126,7 @@ def Adicionar():
                     print("Não é possível ter um item vazio na lista")
                 else:
                     LimparConsole()
-                    ficheiro[nome_escolhido].append(itens)
+                    fichario[nome_escolhido].append(itens)
                     Lista(lista_numero)
 
                     
@@ -142,33 +150,33 @@ def Adicionar():
 def Modificar():
     LimparConsole()
     while(True):
-        if ficheiro:
+        if fichario:
             Dicionario()
             try:
                 key_lista = int(input("Digite o número da lista para abrir-la: "))
                 LimparConsole()
-                nomes_listas = list(ficheiro.keys())
+                nomes_listas = list(fichario.keys())
                 lista_escolhida = nomes_listas[key_lista - 1]
                 Lista(key_lista)
                 try:
                     num = int(input("Digite o número do item para editar: "))
                     item = num - 1
                     
-                    if item >= len(ficheiro[lista_escolhida]) or item < 0:
+                    if item >= len(fichario[lista_escolhida]) or item < 0:
                         LimparConsole()
                         print("Item não encontrado")
                         time.sleep(1.5)
                     
                     else:
                         LimparConsole()
-                        print(f"Editando o item '{ficheiro[lista_escolhida][item]}'")
+                        print(f"Editando o item '{fichario[lista_escolhida][item]}'")
                         nome = input("Digite o novo nome para esse item: ")
                         if nome.strip() == "":
                             print("Não é possivel ter um item vazio na lista")    
 
                         else:
                             LimparConsole()
-                            ficheiro[lista_escolhida][item] = nome
+                            fichario[lista_escolhida][item] = nome
                         
                             print("c = Continuar modificando")
                             print("enter = Voltar")
@@ -203,14 +211,14 @@ def AbrirLista():
 def Remover():
     LimparConsole()
     while(True):
-        if ficheiro:
+        if fichario:
             Dicionario()
             try:
                 key_lista = int(input("Digite o número da lista para abrir-la: "))
                 LimparConsole()
                 Lista(key_lista)
                 try:
-                    nomes_lista = list(ficheiro.keys())
+                    nomes_lista = list(fichario.keys())
                     lista_escolhida = nomes_lista[key_lista - 1]
                     item_num = int(input("Digite o número do item para ser removido: "))
                     item = item_num - 1
@@ -223,8 +231,8 @@ def Remover():
                     
                     else:
                         LimparConsole()
-                        print(f"{ficheiro[lista_escolhida][item]} foi removido(a) da lista")
-                        del ficheiro[lista_escolhida][item]
+                        print(f"{fichario[lista_escolhida][item]} foi removido(a) da lista")
+                        del fichario[lista_escolhida][item]
                         time.sleep(1.5)
                 
                 except ValueError:
@@ -263,9 +271,9 @@ def DeletarLista():
     Dicionario()
     try:
         num_list = int(input("Digite o número da lista para deletar: "))
-        nomes_lista = list(ficheiro.keys())
+        nomes_lista = list(fichario.keys())
         lista_escolhida = nomes_lista[num_list - 1]
-        if num_list > len(ficheiro) or num_list < 0:
+        if num_list > len(fichario) or num_list < 0:
             LimparConsole()
             print("Lista não encontrada")
             time.sleep(1.5)
@@ -278,7 +286,7 @@ def DeletarLista():
             if confirm == "s":
                 LimparConsole()
                 print(f"'{lista_escolhida}' foi deletado com sucesso!")
-                del ficheiro[lista_escolhida]
+                del fichario[lista_escolhida]
                 time.sleep(1.5)
             else:
                 print("errooo")
@@ -293,10 +301,10 @@ def Esvaziar():
     Dicionario()
     try:
         num_list = int(input("Digite o número da lista para limpar: "))
-        nomes_lista = list(ficheiro.keys())
+        nomes_lista = list(fichario.keys())
         lista_escolhida = nomes_lista[num_list - 1]
         
-        if(num_list >= len(ficheiro) or num_list < 0):
+        if(num_list >= len(fichario) or num_list < 0):
             LimparConsole()
             print("Lista não encontrada")
             time.sleep(1)
@@ -309,7 +317,7 @@ def Esvaziar():
 
             key = input().lower()
             if (key == "s"):
-                ficheiro[lista_escolhida].clear()
+                fichario[lista_escolhida].clear()
                 print("Lista esvaziada com sucesso")
                 time.sleep(1)
                 
@@ -338,7 +346,7 @@ while(True):
 
     elif (key == "f"):
         onList = False
-        Ficheiro()
+        CriarFichario()
         
     elif (key == "m"):
         onList = False
