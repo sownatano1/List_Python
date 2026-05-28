@@ -11,7 +11,7 @@ import time
 [X] Contador de itens
     Mostrar algo como: “Total de itens: 7”.
 
-[ ] Sistema de múltiplas listas
+[X] Sistema de múltiplas listas
     Uma lista para compras, outra para estudos, outra para projetos.
 
 [ ] Modo rápido
@@ -22,8 +22,13 @@ import time
 
 """
 
-lista = []
+ficheiro = {}
 key = ""
+onList = False
+
+listas = {
+    "compras": []
+}
 
 def LimparConsole():
     os.system("cls" if os.name == "nt" else "clear") 
@@ -35,83 +40,154 @@ def Opcoes():
     print("m = Modificar um item da lista")
     print("l = Abrir a lista")
     print("r = Remover item da lista")
+    print("d = Deletar lista do ficheiro")
     print("e = Esvaziar a lista inteira")
     print("s = Sair")
     print("-==========================-")
     
-def Lista():
-    if lista:
+def Dicionario():
+    if ficheiro:
+        print("========== Ficheiro ===========")
+        for indice, item in enumerate(ficheiro, start=1):
+            print(f"{indice}. {item}")
+        print("===============================")
+        if onList: 
+            try:
+                key_lista = int(input("Digite o número da lista para abrir-la: "))
+                if (key_lista > len(ficheiro) or key_lista < 0):
+                    LimparConsole()
+                    print("Lista não encontrada")
+                else:
+                    LimparConsole()
+                    Lista(key_lista)
+                input("Pressione 'ENTER' para voltar para o menu")
+            except ValueError:
+                print("Digite apenas o número da lista para abrir-la")
+                time.sleep(1.5)
+    else:
+        print("========== Ficheiro ===========")
+        print("             Vazio             ")
+        print("===============================")
+        input("Pressione 'ENTER' para voltar para o menu")
+
+def Lista(lista_num):
+    nomes_listas = list(ficheiro.keys())
+    lista_escolhida = nomes_listas[lista_num - 1]
+    
+    if len(ficheiro[lista_escolhida]) > 0:
+        print(f"Lista de '{lista_escolhida}'")
         print("============ Lista ============")
-        for indice, item in enumerate(lista, start=1):
+        for indice, item in enumerate(ficheiro[lista_escolhida], start=1):
             print(f"{indice}. {item}")
         print("===============================")
     else:
+        print(f"Lista de '{lista_escolhida}'")
         print("============ Lista ============")
         print("             Vazia             ")
         print("===============================")
 
 def Ficheiro():
-    print("a")
+    LimparConsole()
+    while(True):
+        novo_ficheiro = input("Digite o nome do novo ficheiro: ")
+        ficheiro[novo_ficheiro] = []
+        Dicionario()
+        print("c = Continuar")
+        print("enter = Voltar")
+        key = input().lower()
+
+        if key not in ["c", "a"]:
+            break
+
+        else:
+            LimparConsole()
 
 def Adicionar():
     LimparConsole()
     while(True):
-        itens = input("Digite o item para adicionar na lista: ")
-        if itens.strip() == "":
-            print("Não é possível ter um item vazio na lista")
-        else:
-            lista.append(itens)
-            
-        print("c = Continuar")
-        print("enter = Voltar")
-        key = input().lower()
-        
-        if key not in ["c", "a"]:
-            break
-        
-        else:
+        Dicionario()
+        try:
+            lista_numero = int(input("Digite o número da lista para abrir-la: "))
             LimparConsole()
-            
-def Modificar():
-    LimparConsole()
-    while(True):
-        if lista:
-            Lista()
             try:
-                num = int(input("Digite o número do item para editar: "))
-                item = num - 1
-                
-                if item >= len(lista) or item < 0:
+                nomes_listas = list(ficheiro.keys())
+                nome_escolhido = nomes_listas[lista_numero - 1]
+                itens = input(f"Digite o nome do item para adicionar na lista '{nome_escolhido}': ")
+                if itens.strip() == "":
                     LimparConsole()
-                    print("Item não encontrado")
-                    time.sleep(1.5)
+                    print("Não é possível ter um item vazio na lista")
+                else:
+                    LimparConsole()
+                    ficheiro[nome_escolhido].append(itens)
+                    Lista(lista_numero)
+
+                    
+                print("c = Continuar")
+                print("enter = Voltar")
+                key = input().lower()
+                
+                if key not in ["c", "a"]:
+                    break
                 
                 else:
                     LimparConsole()
-                    print(f"Editando o item '{lista[item]}'")
-                    nome = input("Digite o novo nome para esse item: ")
-                    if nome.strip() == "":
-                        print("Não é possivel ter um item vazio na lista")    
+            except IndexError:
+                print("Lista não encontrada")
+                time.sleep(1)
+        except ValueError:
+            print("Digite apenas o número da lista para abrir-la")
+            time.sleep(1.5)
+            break
 
+def Modificar():
+    LimparConsole()
+    while(True):
+        if ficheiro:
+            Dicionario()
+            try:
+                key_lista = int(input("Digite o número da lista para abrir-la: "))
+                LimparConsole()
+                nomes_listas = list(ficheiro.keys())
+                lista_escolhida = nomes_listas[key_lista - 1]
+                Lista(key_lista)
+                try:
+                    num = int(input("Digite o número do item para editar: "))
+                    item = num - 1
+                    
+                    if item >= len(ficheiro[lista_escolhida]) or item < 0:
+                        LimparConsole()
+                        print("Item não encontrado")
+                        time.sleep(1.5)
+                    
                     else:
                         LimparConsole()
-                        lista.pop(item)
-                        lista.insert(item, nome)
-                        Lista()
-                    
-                        print("c = Continuar modificando")
-                        print("enter = Voltar")
-                        key = input().lower()
-                        
-                        if key not in ["c", "m"]:
-                            break
-                        
+                        print(f"Editando o item '{ficheiro[lista_escolhida][item]}'")
+                        nome = input("Digite o novo nome para esse item: ")
+                        if nome.strip() == "":
+                            print("Não é possivel ter um item vazio na lista")    
+
                         else:
                             LimparConsole()
-                            continue
+                            ficheiro[lista_escolhida][item] = nome
+                        
+                            print("c = Continuar modificando")
+                            print("enter = Voltar")
+                            key = input().lower()
+                            
+                            if key not in ["c", "m"]:
+                                break
+                            
+                            else:
+                                LimparConsole()
+                                continue
+                except ValueError:
+                    LimparConsole()
+                    print("Digite apenas o número do item da lista")
+                    time.sleep(2)
+                    break
             except ValueError:
                 LimparConsole()
-                print("Digite apenas o número do item da lista")
+                print("Digite apenas o número da lista para abrir-la")
                 time.sleep(2)
                 break
         else:
@@ -122,75 +198,130 @@ def Modificar():
             
 def AbrirLista():
     LimparConsole()
-    Lista()
-    print(f"Total de itens: {len(lista)}")
-    input("Pressione 'ENTER' para voltar para o menu")
+    Dicionario()
 
 def Remover():
     LimparConsole()
     while(True):
-        if lista:
-            Lista()
+        if ficheiro:
+            Dicionario()
             try:
-                item_num = int(input("Digite o número do item para ser removido: "))
-                item = item_num - 1
+                key_lista = int(input("Digite o número da lista para abrir-la: "))
+                LimparConsole()
+                Lista(key_lista)
+                try:
+                    nomes_lista = list(ficheiro.keys())
+                    lista_escolhida = nomes_lista[key_lista - 1]
+                    item_num = int(input("Digite o número do item para ser removido: "))
+                    item = item_num - 1
+                    
+                    if item >= len(lista_escolhida) or item < 0:
+                        LimparConsole()
+                        print("Item não encontrado")
+                        time.sleep(1.5)
+                        break
+                    
+                    else:
+                        LimparConsole()
+                        print(f"{ficheiro[lista_escolhida][item]} foi removido(a) da lista")
+                        del ficheiro[lista_escolhida][item]
+                        time.sleep(1.5)
                 
-                if item >= len(lista) or item < 0:
+                except ValueError:
                     LimparConsole()
-                    print("Item não encontrado")
+                    print("Digite apenas o número do item para ser removido")
                     time.sleep(1.5)
+                    break
+                    
+                LimparConsole()
+                print("Itens restantes na: ")
+                Lista(key_lista)
+                print("c = Continuar removendo")
+                print("enter = Voltar")
+                key = input().lower()
+                
+                if key not in ["c", "r"]:
+                    break
                 
                 else:
                     LimparConsole()
-                    print(f"{lista[item]} foi removido(a) da lista")
-                    lista.remove(lista[item])
-                    time.sleep(1.5)
-            
+                    continue
+                
             except ValueError:
                 LimparConsole()
-                print("Digite apenas o número do item para ser removido")
-                time.sleep(1.5)
-                
-            LimparConsole()
-            print("        Itens restantes        ")
-            Lista()
-            print("c = Continuar removendo")
-            print("enter = Voltar")
-            key = input().lower()
-            
-            if key not in ["c", "r"]:
+                print("Digite apenas o número da lista para abrir-la")
+                time.sleep(2)
                 break
-            
-            else:
-                LimparConsole()
-                continue
         else:
             print("Não é possível remover itens da lista")
             print("A lista está vazia")
             time.sleep(2)
             break
             
+def DeletarLista():
+    LimparConsole()
+    Dicionario()
+    try:
+        num_list = int(input("Digite o número da lista para deletar: "))
+        nomes_lista = list(ficheiro.keys())
+        lista_escolhida = nomes_lista[num_list - 1]
+        if num_list > len(ficheiro) or num_list < 0:
+            LimparConsole()
+            print("Lista não encontrada")
+            time.sleep(1.5)
+        else:
+            LimparConsole()
+            print(f"Deletando a lista '{lista_escolhida}', confirmar?")
+            print("s = Sim")
+            print("n = Não (Voltar)")
+            confirm = input().lower()
+            if confirm == "s":
+                LimparConsole()
+                print(f"'{lista_escolhida}' foi deletado com sucesso!")
+                del ficheiro[lista_escolhida]
+                time.sleep(1.5)
+            else:
+                print("errooo")
+                time.sleep(1)
+    
+    except ValueError:
+        print("Digite apenas o número da lista")
+        time.sleep(1)
+    
 def Esvaziar():
     LimparConsole()
-    Lista()
-    print("Tem certeza que quer apagar a lista inteira?")
-    print("s = Sim")
-    print("n = Não (voltar)")
-    
-    key = input().lower()
-    if (key == "s"):
-        lista.clear()
-        print("Lista apagada com sucesso")
-        time.sleep(1)
+    Dicionario()
+    try:
+        num_list = int(input("Digite o número da lista para limpar: "))
+        nomes_lista = list(ficheiro.keys())
+        lista_escolhida = nomes_lista[num_list - 1]
         
-    elif (key == "n"):
-        print("Voltando...")
+        if(num_list >= len(ficheiro) or num_list < 0):
+            LimparConsole()
+            print("Lista não encontrada")
+            time.sleep(1)
+        else:
+            LimparConsole()
+            Lista(num_list)
+            print(f"Tem certeza que quer esvaziar a lista '{lista_escolhida}' inteira?")
+            print("s = Sim")
+            print("n = Não (voltar)")
+
+            key = input().lower()
+            if (key == "s"):
+                ficheiro[lista_escolhida].clear()
+                print("Lista esvaziada com sucesso")
+                time.sleep(1)
+                
+            else:
+                print("Voltando...")
+                time.sleep(1)
+                
+    except ValueError:
+        LimparConsole()
+        print("Digite apenas o número da lista")
         time.sleep(1)
-        
-    else:
-        print("Opção não encontrada!")
-        time.sleep(1)
-            
+                
 def Sair():
     LimparConsole()
     print("Saindo...")
@@ -202,21 +333,31 @@ while(True):
     key = input().lower()
         
     if (key == "a"):
+        onList = False
         Adicionar()
 
     elif (key == "f"):
+        onList = False
         Ficheiro()
         
     elif (key == "m"):
+        onList = False
         Modificar()
         
     elif (key == "l"):
+        onList = True
         AbrirLista()
         
     elif (key == "r"):
+        onList = False
         Remover()
+        
+    elif (key == "d"):
+        onList = False
+        DeletarLista()
             
     elif (key == "e"):
+        onList = False
         Esvaziar()
         
     elif (key == "s"):
