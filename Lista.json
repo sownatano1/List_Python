@@ -1,1 +1,11 @@
-{}
+{
+    "Comidas": [
+        "Batata",
+        "Frango"
+    ],
+    "Esportes": [
+        "Basquete",
+        "Voley",
+        "Natação"
+    ]
+}
