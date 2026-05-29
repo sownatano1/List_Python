@@ -110,6 +110,7 @@ def Lista(lista_num):
 def Criarficheiro():
     LimparConsole()
     while(True):
+        Dicionario()
         novo_ficheiro = input("Digite o nome do novo ficheiro: ")
         if novo_ficheiro.strip() == "":
             LimparConsole()
@@ -120,6 +121,7 @@ def Criarficheiro():
             print("Não é possível ter duas listas com o mesmo nome")
             time.sleep(1.5)
         else:
+            LimparConsole()
             ficheiro[novo_ficheiro] = []
             Dicionario()
             Salvar()
