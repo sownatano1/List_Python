@@ -15,7 +15,7 @@ import json
 [X] Sistema de múltiplas listas
     Uma lista para compras, outra para estudos, outra para projetos.
 
-[ ] Modo rápido
+[X] Modo rápido
     Adicionar vários itens de uma vez, sem precisar confirmar a cada item.
 
 [ ] Exportar lista
@@ -24,6 +24,9 @@ import json
 """
 
 onList = False
+modoRapido = False
+
+modo = "Desativado"
 
 def Carregar():
     try:
@@ -41,12 +44,16 @@ def Salvar():
 def LimparConsole():
     os.system("cls" if os.name == "nt" else "clear") 
 
-
 def Opcoes():
     print("-========== MENU ==========-")
     print("f = Criar um ficheiro")
     print("l = Abrir a lista")
     print("")
+    if modoRapido:
+        modo = "Ativado"
+    else:
+        modo = "Desativado"
+    print(f"ar = Ativar/Desativar modo rápido [{modo}]")
     print("a = Adicionar item na lista")
     print("m = Modificar um item da lista")
     print("")
@@ -126,6 +133,7 @@ def Criarficheiro():
 
         else:
             LimparConsole()
+            
 def Adicionar():
     LimparConsole()
     while(True):
@@ -136,16 +144,31 @@ def Adicionar():
             try:
                 nomes_listas = list(ficheiro.keys())
                 nome_escolhido = nomes_listas[lista_numero - 1]
-                itens = input(f"Digite o nome do item para adicionar na lista '{nome_escolhido}': ")
-                if itens.strip() == "":
-                    LimparConsole()
-                    print("Não é possível ter um item vazio na lista")
-                else:
-                    LimparConsole()
-                    ficheiro[nome_escolhido].append(itens)
+                if modoRapido == False:
                     Lista(lista_numero)
-                    Salvar()
-
+                    itens = input(f"Digite o nome do item para adicionar na lista '{nome_escolhido}': ")
+                    if itens.strip() == "":
+                        LimparConsole()
+                        print("Não é possível ter um item vazio na lista")
+                    else:
+                        LimparConsole()
+                        ficheiro[nome_escolhido].append(itens)
+                        Lista(lista_numero)
+                        Salvar()
+                else:
+                    while(True):
+                        LimparConsole()
+                        Lista(lista_numero)
+                        print(f"Digite o nome do item para adicionar na lista '{nome_escolhido}': ")
+                        print("Para sair apenas aperte 'ENTER'")
+                        itens = input()
+                        if itens.strip() == "":
+                            break
+                        else:
+                            ficheiro[nome_escolhido].append(itens)
+                            Salvar()
+                
+                LimparConsole()
                 print("c = Continuar")
                 print("enter = Voltar")
                 key = input().lower()
@@ -369,6 +392,9 @@ while(True):
     if (key == "a"):
         onList = False
         Adicionar()
+        
+    elif (key == "ar"):
+        modoRapido = not modoRapido
 
     elif (key == "f"):
         onList = False
