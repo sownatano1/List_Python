@@ -2,7 +2,7 @@ import os
 import time
 import json
 
-""""
+"""
 [X] Editar item
     Alterar o nome de um item que já está na lista.
 
@@ -20,7 +20,6 @@ import json
 
 [ ] Exportar lista
     Gerar um arquivo .txt, .csv ou .json.
-
 """
 
 onList = False
