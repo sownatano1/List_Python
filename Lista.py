@@ -72,7 +72,7 @@ def Dicionario():
             try:
                 list_num = int(input("Digite o número da lista para abri-la: "))
                 #Mostrar a lista pelo número digitado pelo usuário
-                if (list_num > len(ficheiro) or list_num < 0):
+                if (list_num > len(ficheiro) or list_num <= 0):
                     LimparConsole()
                     print("Lista não encontrada")
                 else:
@@ -345,7 +345,7 @@ def DeletarLista():
             lista_escolhida = EncontrarLista(num_list)
             
             #Evitar o erro de colocar um número da lista que não está no ficheiro
-            if num_list > len(ficheiro) or num_list < 0:
+            if num_list > len(ficheiro) or num_list < 1:
                 LimparConsole()
                 print("Lista não encontrada")
                 time.sleep(1.5)
@@ -378,7 +378,7 @@ def Esvaziar():
         lista_escolhida = EncontrarLista(num_list)
         
         #Evitar o erro de buscar por uma lista usando um número que não existe no ficheiro
-        if(num_list > len(ficheiro) or num_list < 0):
+        if(num_list > len(ficheiro) or num_list < 1):
             LimparConsole()
             print("Lista não encontrada")
             time.sleep(1)
