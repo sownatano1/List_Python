@@ -18,7 +18,7 @@ import json
 [X] Modo rápido
     Adicionar vários itens de uma vez, sem precisar confirmar a cada item.
 
-[ ] Exportar lista
+[X] Exportar lista
     Gerar um arquivo .txt, .csv ou .json.
 """
 
@@ -60,6 +60,7 @@ def Opcoes():
     print("d = Deletar lista do ficheiro")
     print("e = Esvaziar a lista inteira")
     print("")
+    print("t = Gerar um arquivo .txt do ficheiro")
     print("s = Sair")
     print("-==========================-")
     
@@ -378,7 +379,20 @@ def Esvaziar():
         LimparConsole()
         print("Digite apenas o número da lista")
         time.sleep(1)
-                
+
+def GerarTxt():
+    LimparConsole()
+    try:
+        with open("ficheiro.txt", mode="w", encoding="utf-8") as file:
+            for key, itens in ficheiro.items():
+                file.write(f"{key}: {itens}\n")
+                file.write(" \n")
+        print("Aquivo de texto criado com sucesso")
+        time.sleep(1.5)
+    except FileNotFoundError:
+        print("Não é possivel criar o arquivo")
+        time.sleep(1.5)
+
 def Sair():
     LimparConsole()
     print("Saindo...")
@@ -420,6 +434,10 @@ while(True):
     elif (key == "e"):
         onList = False
         Esvaziar()
+    
+    elif (key == "t"):
+        onList = False
+        GerarTxt()
         
     elif (key == "s"):
         Sair()
