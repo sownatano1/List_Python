@@ -34,6 +34,14 @@ def Salvar():
 def LimparConsole():
     #Limpar o console usando comandos para diferentes sistemas
     os.system("cls" if os.name == "nt" else "clear") 
+    
+#Função para encontrar uma lista escolhida do ficheiro
+def EncontrarLista(list_num):
+    #Busca todos os nomes da lista
+    nomes_lista = list(ficheiro.keys())
+    #Escolhe a lista de acordo com o número digitado
+    lista_escolhida = nomes_lista[list_num - 1]
+    return lista_escolhida
 
 def Opcoes():
     print("-========== MENU ==========-")
@@ -82,10 +90,7 @@ def Dicionario():
             input("Pressione 'ENTER' para voltar para o menu")
 
 def Lista(lista_num):
-    #Todos os nomes das listas que estão no ficheiro
-    nomes_listas = list(ficheiro.keys())
-    #Encontra e escolhe a lista pelo número dela usando o número digitado
-    lista_escolhida = nomes_listas[lista_num - 1]
+    lista_escolhida = EncontrarLista(lista_num)
     
     #Mostrar a lista apenas quando tiver pelo menos 1 lista dentro dela
     if len(ficheiro[lista_escolhida]) > 0:
@@ -142,34 +147,32 @@ def Adicionar():
     while(True):
         Dicionario()
         try:
-            lista_numero = int(input("Digite o número da lista para abri-la: "))
+            lista_num = int(input("Digite o número da lista para abri-la: "))
             LimparConsole()
             try:
-                #Todos os nomes das lista dentro do ficheiro
-                nomes_listas = list(ficheiro.keys())
-                #Buscar a lista usando o numero que foi digitado
-                nome_escolhido = nomes_listas[lista_numero - 1]
+                nome_escolhido = EncontrarLista(lista_num)
                 
                 #Caso o modo rapido não esteja ativado ele seguirá normalmente
                 if modoRapido == False:
-                    Lista(lista_numero)
+                    Lista(lista_num)
                     itens = input(f"Digite o nome do item para adicionar na lista '{nome_escolhido}': ")
                     #Evitar items vazios na lista
                     if itens.strip() == "":
                         LimparConsole()
                         print("Não é possível ter um item vazio na lista")
+                        time.sleep(1)
                     else:
                         LimparConsole()
                         #Criar o item dentro da lista
                         ficheiro[nome_escolhido].append(itens)
-                        Lista(lista_numero)
+                        Lista(lista_num)
                         Salvar()
                         
                 #Se o modo rápido estiver ativado
                 else:
                     while(True):
                         LimparConsole()
-                        Lista(lista_numero)
+                        Lista(lista_num)
                         print(f"Digite o nome do item para adicionar na lista '{nome_escolhido}': ")
                         print("Para sair apenas aperte 'ENTER'")
                         itens = input()
@@ -208,8 +211,7 @@ def Modificar():
             try:
                 list_num = int(input("Digite o número da lista para abri-la: "))
                 LimparConsole()
-                nomes_listas = list(ficheiro.keys())
-                lista_escolhida = nomes_listas[list_num - 1]
+                lista_escolhida = EncontrarLista(list_num)
                 Lista(list_num)
                 try:
                     item_num = int(input("Digite o número do item para editar: "))
@@ -278,10 +280,7 @@ def Remover():
                 LimparConsole()
                 Lista(list_num)
                 try:
-                    #Busca todos os nomes da lista
-                    nomes_lista = list(ficheiro.keys())
-                    #Escolhe a lista de acordo com o número digitado
-                    lista_escolhida = nomes_lista[list_num - 1]
+                    lista_escolhida = EncontrarLista(list_num)
                     item_num = int(input("Digite o número do item para ser removido: "))
                     #Cálculo para pegar o item na lista correta
                     item = item_num - 1
@@ -343,10 +342,8 @@ def DeletarLista():
         try:
             Dicionario()
             num_list = int(input("Digite o número da lista para deletar: "))
-            #Encontra os nomes das listas que estão no ficheiro
-            nomes_lista = list(ficheiro.keys())
-            #Escolhe a lista com o número digitado
-            lista_escolhida = nomes_lista[num_list - 1]
+            lista_escolhida = EncontrarLista(num_list)
+            
             #Evitar o erro de colocar um número da lista que não está no ficheiro
             if num_list > len(ficheiro) or num_list < 0:
                 LimparConsole()
@@ -378,10 +375,7 @@ def Esvaziar():
     Dicionario()
     try:
         num_list = int(input("Digite o número da lista para limpar: "))
-        #Econtrar todos os nomes da lista que estiver no ficheiro
-        nomes_lista = list(ficheiro.keys())
-        #Buscar a lista escolhida pelo número digitado
-        lista_escolhida = nomes_lista[num_list - 1]
+        lista_escolhida = EncontrarLista(num_list)
         
         #Evitar o erro de buscar por uma lista usando um número que não existe no ficheiro
         if(num_list > len(ficheiro) or num_list < 0):
@@ -448,6 +442,7 @@ while(True):
         Adicionar()
         
     elif (key == "ar"):
+        #Interruptor para ativar e desativar usando o mesmo comando
         modoRapido = not modoRapido
 
     elif (key == "f"):
