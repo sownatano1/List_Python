@@ -110,10 +110,10 @@ def Criarficheiro():
     LimparConsole()
     while(True):
         Dicionario()
-        novo_ficheiro = input("Digite o nome do novo ficheiro: ")
+        novo_ficheiro = input("Digite o nome da nova lista: ")
         if novo_ficheiro.strip() == "":
             LimparConsole()
-            print("Não é possível ter um ficheiro sem nome")
+            print("Não é possível ter uma lista sem nome")
             time.sleep(1.5)
         elif novo_ficheiro in ficheiro:
             LimparConsole()
